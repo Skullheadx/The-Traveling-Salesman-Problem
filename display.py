@@ -29,6 +29,7 @@ class Node:
 
 
 class Display:
+    pygame.display.set_caption("Traveling Salesman Problem")
 
     def __init__(self, path: str) -> None:
         with open(path, "r") as f:
