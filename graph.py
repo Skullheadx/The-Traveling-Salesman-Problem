@@ -16,7 +16,7 @@ def create(path: str, width: int, height: int, nodes: int):
         text += f"{x} {y}\n"
 
     current_file = 0
-    for root, dirs, files in os.walk("graphs/"):
+    for root, dirs, files in os.walk(path):
         for name in files:
             current_file = max(current_file, prune_filename(name))
     filename = f"graph{current_file + 1}.txt"
@@ -39,3 +39,14 @@ def get_distances(graph: list) -> dict:
             x2, y2 = j
             distances[i][j] = distance(x1, x2, y1, y2)
     return distances
+
+
+def calculate_distance(route: list) -> float:
+    x1, y1 = route[0]
+    x2, y2 = route[-1]
+    d = distance(x1, x2, y1, y2)
+    for i, node in enumerate(route[:-1]):
+        x2, y2 = route[i + 1]
+        d += distance(x1, x2, y1, y2)
+        x1, y1 = x2, y2
+    return d
