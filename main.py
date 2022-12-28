@@ -1,4 +1,4 @@
-from graph import create, print_info, find_MST, find_one_tree
+from graph import create, read, print_info, find_MST, find_one_tree
 from display import Display
 from brute_force import brute_force
 from nearest_neighbor import nearest_neighbor
@@ -7,6 +7,7 @@ import os
 
 GRAPH_PATH = "graphs/"
 DELETE_PREVIOUS_FILES = True
+CREATE_NEW_GRAPHS = True
 
 
 def main():
@@ -20,17 +21,21 @@ def main():
                 else:
                     print("The file does not exist")
 
-    graph, filename = create(GRAPH_PATH, 720, 720, 100)
+    if CREATE_NEW_GRAPHS:
+        graph, filename = create(GRAPH_PATH, 640, 640, 500)
+    else:
+        filename = "graph1.txt"
+        graph = read(GRAPH_PATH, filename)
 
     time_start = perf_counter()
     # route = brute_force(graph)  # 10 nodes in 85.042 seconds. Optimal = 2,262.29
     route = nearest_neighbor(graph)  # 100 nodes in 0.5762094999663532 seconds. Distance = 6,270.568142156188
     time_end = perf_counter()
 
-    MST = find_MST(graph)
+    # MST = find_MST(graph)
     ONE_TREE = find_one_tree(graph)
 
-    print_info(route, time_end - time_start, "NN Heuristic", MST, ONE_TREE, r=100)
+    print_info(route, time_end - time_start, "NN Heuristic", 0.0, ONE_TREE, r=100)
 
     display = Display(os.path.join(GRAPH_PATH, filename), route)
     display.show()

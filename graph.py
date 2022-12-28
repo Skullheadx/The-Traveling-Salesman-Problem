@@ -31,6 +31,16 @@ def create(path: str, width: int, height: int, nodes: int):
     return graph, filename
 
 
+def read(path: str, filename: str) -> list:
+    with open(os.path.join(path, filename)) as f:
+        contents = f.read().split("\n")[1:]
+        if contents[-1] == "":
+            contents = contents[:-1]
+    graph = [tuple(map(int, i.split(" "))) for i in contents]
+
+    return graph
+
+
 def distance(town1: tuple, town2: tuple) -> float:
     return pow(pow(town1[0] - town2[0], 2) + pow(town1[1] - town2[1], 2), 0.5)
 
@@ -102,18 +112,20 @@ def find_MST(graph: list) -> float:
     mst = 0.0
     visited = [graph[0]]
     unvisited = graph[1:]
-    for i in range(len(graph)-1):
-        v1 = visited[i]
+    for i in range(len(graph) - 1):
         minimum = None
-        min_town = None
-        for v2 in unvisited:
-            d = distance(v1, v2)
-            if minimum is None or d <= minimum:
-                minimum = d
-                min_town = v2
-        visited.append(min_town)
-        unvisited.remove(min_town)
-        mst += distance(v1, min_town)
+        min_town1 = None
+        min_town2 = None
+        for v1 in visited:
+            for v2 in unvisited:
+                d = distance(v1, v2)
+                if minimum is None or d <= minimum:
+                    minimum = d
+                    min_town1 = v1
+                    min_town2 = v2
+        visited.append(min_town2)
+        unvisited.remove(min_town2)
+        mst += distance(min_town1, min_town2)
     return mst
 
 
@@ -124,4 +136,5 @@ def find_one_tree(graph: list) -> float:
     for town in graph[1:]:
         distances.append(distance(removed_vertex, town))
     distances.sort()
-    return mst + distances[0] + distances[1]
+
+    return mst + distances[1]

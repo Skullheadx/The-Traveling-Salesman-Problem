@@ -1,5 +1,6 @@
 import pygame
 import math
+from graph import distance
 
 pygame.init()
 
@@ -8,6 +9,41 @@ BLACK = (0, 0, 0)
 GRAY = (128, 128, 128)
 BLUE = (0, 0, 255)
 ORANGE = (255, 165, 0)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+
+
+def find_MST(route: list) -> list:
+    visited = [route[0]]
+    unvisited = route[1:]
+    for i in range(len(route) - 1):
+        v1 = visited[i]
+        minimum = None
+        min_town = None
+        for v2 in unvisited:
+            d = distance(v1, v2)
+            if minimum is None or d <= minimum:
+                minimum = d
+                min_town = v2
+        visited.append(min_town)
+        unvisited.remove(min_town)
+    return visited
+
+
+def find_one_tree(route: list) -> list:
+    removed_vertex = route[0]
+    mst = find_MST(route[1:-1])
+    distances = []
+    for town in route[1:-1]:
+        distances.append((distance(removed_vertex, town), town))
+    distances.sort()
+    mst.insert(0, removed_vertex)
+    mst.insert(0, distances[0][1])
+    mst.insert(0, removed_vertex)
+    mst.insert(0, distances[1][1])
+    mst.insert(0, removed_vertex)
+
+    return mst
 
 
 class Node:
@@ -85,6 +121,9 @@ class Display:
         self.route = route
         self.salesman = Salesman(self.route)
 
+        # self.mst = find_MST(route[:-1])
+        # self.ot = find_one_tree(route)
+
     def update(self, delta: float) -> None:
         self.salesman.update(delta)
 
@@ -103,8 +142,9 @@ class Display:
             self.screen.fill(WHITE)
 
             if len(self.route) > 1:
-                pygame.draw.aalines(self.screen, BLUE, True, self.route, 5)
-
+                # pygame.draw.lines(self.screen, GREEN, False, self.ot, 15)  # One Tree
+                # pygame.draw.lines(self.screen, RED, False, self.mst, 10)  # Minimum Spanning Tree
+                pygame.draw.lines(self.screen, BLUE, True, self.route, 3)  # Route
             for node in self.nodes:
                 node.draw(self.screen)
 
