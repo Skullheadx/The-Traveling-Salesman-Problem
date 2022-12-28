@@ -17,3 +17,8 @@ Assuming that:
 **Method 1: Brute Force**
 
 By checking every single possibility and calculating the distance of each route, the shortest path can be determined. As **n**, the number of towns, increases, on the first turn, (starting at any town) there are n-1 towns to choose from, then on the second turn there are n-2 choices and so on until there is only one option left which is to return to the starting town. This means that there are `(n - 1)! / 2` total possibilities accounting for duplicates. This strategy while easy to implement, is not suited to calculating more than 20 nodes as the number possibilities that would be considered at _n=20_ is `(20-1)!/2 = 60,822,550,204,416,000`. 
+
+--------------------------------------------------------------------------------------------------------------
+**Method 2: Nearest Neighbor (NN) Heuristic**
+
+If we start at any town and find the closest town that we haven't been to yet and continue this until all the cities have been visited, this creates a complete tour.
