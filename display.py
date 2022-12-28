@@ -126,5 +126,5 @@ class Display:
 
             pygame.display.update()
             delta = clock.tick(60) / 1000  # Seconds
-            # pygame.image.save(self.screen, "NN Heuristic + MST.png")
+            # pygame.image.save(self.screen, "NN_Heuristic+OneTree.png")
             # quit()

@@ -34,14 +34,14 @@ def main():
     MST_distance, MST = find_MST(graph)
     print("MST_DISTANCE:", MST_distance)
     one_tree_time_start = perf_counter()
-    # one_tree_distance, one_tree = find_one_tree(graph)
+    one_tree_distance, one_tree = find_one_tree(graph)
     lower_bound, one_tree, removed_vertex = find_lower_bound(graph)
     one_tree_time_end = perf_counter()
 
     print_info(route, route_time_end - route_time_start, "NN Heuristic", lower_bound,
                one_tree_time_end - one_tree_time_start, r=3000)
 
-    display = Display(os.path.join(GRAPH_PATH, filename), route, mst=MST, one_tree=None, removed_vertex = removed_vertex)
+    display = Display(os.path.join(GRAPH_PATH, filename), route, mst=None, one_tree=one_tree, removed_vertex = removed_vertex)
     display.show()
 
 
