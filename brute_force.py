@@ -1,5 +1,5 @@
 from queue import Queue
-from graph import calculate_distance
+from graph import calculate_route
 
 
 def brute_force(graph: list) -> list:
@@ -23,7 +23,7 @@ def brute_force(graph: list) -> list:
     shortest_distance = None
     shortest_route = []
     for route in routes:
-        distance = calculate_distance(route)
+        distance = calculate_route(route)
         if shortest_distance is None or distance < shortest_distance:
             shortest_distance = distance
             shortest_route = route

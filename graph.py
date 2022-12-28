@@ -26,27 +26,25 @@ def create(path: str, width: int, height: int, nodes: int):
     return graph, filename
 
 
-def distance(x1: int, x2: int, y1: int, y2: int) -> float:
-    return pow(pow(x1 - x2, 2) + pow(y1 - y2, 2), 0.5)
+def distance(town1: tuple, town2: tuple) -> float:
+    return pow(pow(town1[0] - town2[0], 2) + pow(town1[1] - town2[1], 2), 0.5)
 
 
 def get_distances(graph: list) -> dict:
     distances = dict()
-    for i in graph:
-        distances[i] = dict()
-        x1, y1 = i
-        for j in graph:
-            x2, y2 = j
-            distances[i][j] = distance(x1, x2, y1, y2)
+    for town1 in graph:
+        distances[town1] = dict()
+        for town2 in graph:
+            distances[town1][town2] = distance(town1, town2)
     return distances
 
 
-def calculate_distance(route: list) -> float:
-    x1, y1 = route[0]
-    x2, y2 = route[-1]
-    d = distance(x1, x2, y1, y2)
+def calculate_route(route: list) -> float:
+    town1 = route[0]
+    town2 = route[-1]
+    d = distance(town1, town2)
     for i, node in enumerate(route[:-1]):
-        x2, y2 = route[i + 1]
-        d += distance(x1, x2, y1, y2)
-        x1, y1 = x2, y2
+        town2 = route[i + 1]
+        d += distance(town1, town2)
+        town1 = town2
     return d
