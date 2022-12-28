@@ -78,7 +78,7 @@ def find_shortest_route(routes: list) -> list:
     return shortest_route
 
 
-def print_info(route: list, time: float, method_name: str, mst: float, ot: float, r=0) -> None:
+def print_info(route: list, time: float, method_name: str, one_tree: float, one_tree_time:float, r=0) -> None:
     print(
         f"""
 Traveling Salesman Problem
@@ -86,8 +86,8 @@ Method Used: {method_name}
 Time Used: {round(time, r):,} seconds
 Number of Nodes: {(len(route) - 1):,}
 Distance: {round(calculate_route(route), r):,}
-Minimum Spanning Tree: {round(mst, r):,}
-One Tree: {round(ot, r):,}
+One Tree Lower Bound: {round(one_tree, r):,}
+One Tree Time Used: {round(one_tree_time, r):,}
 """)
 
 
@@ -129,10 +129,16 @@ def find_MST(graph: list) -> float:
 
 
 def find_one_tree(graph: list) -> float:
-    removed_vertex = graph[0]
-    mst = find_MST(graph[1:])
-    distances = []
-    for town in graph[1:]:
-        distances.append(distance(removed_vertex, town))
-    distances.sort()
-    return mst + distances[1]
+    lower_bound = None
+
+    for removed_vertex in graph:
+        g = graph[:graph.index(removed_vertex)] + graph[graph.index(removed_vertex)+1:]
+        mst = find_MST(g)
+        distances = []
+        for town in g:
+            distances.append(distance(removed_vertex, town))
+        distances.sort()
+        d = mst + distances[1]
+        if lower_bound is None or d < lower_bound:
+            lower_bound = d
+    return lower_bound
