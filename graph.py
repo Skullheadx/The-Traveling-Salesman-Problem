@@ -1,5 +1,6 @@
 import os
 import random
+from queue import PriorityQueue
 
 
 def prune_filename(filename: str) -> int:
@@ -50,7 +51,8 @@ def get_distances(graph: list) -> dict:
     for town1 in graph:
         distances[town1] = dict()
         for town2 in graph:
-            distances[town1][town2] = distance(town1, town2)
+            if town1 != town2:
+                distances[town1][town2] = distance(town1, town2)
     return distances
 
 
@@ -79,14 +81,14 @@ def find_shortest_route(routes: list) -> list:
 def print_info(route: list, time: float, method_name: str, mst: float, ot: float, r=0) -> None:
     print(
         f"""
-        Traveling Salesman Problem
-        Method Used: {method_name}
-        Time Used: {round(time, r):,} seconds
-        Number of Nodes: {(len(route) - 1):,}
-        Distance: {round(calculate_route(route), r):,}
-        Minimum Spanning Tree: {round(mst, r):,}
-        One Tree: {round(ot, r):,}
-        """)
+Traveling Salesman Problem
+Method Used: {method_name}
+Time Used: {round(time, r):,} seconds
+Number of Nodes: {(len(route) - 1):,}
+Distance: {round(calculate_route(route), r):,}
+Minimum Spanning Tree: {round(mst, r):,}
+One Tree: {round(ot, r):,}
+""")
 
 
 """
@@ -110,22 +112,19 @@ MST cost <= cost(T)
 
 def find_MST(graph: list) -> float:
     mst = 0.0
-    visited = [graph[0]]
-    unvisited = graph[1:]
-    for i in range(len(graph) - 1):
-        minimum = None
-        min_town1 = None
-        min_town2 = None
-        for v1 in visited:
-            for v2 in unvisited:
-                d = distance(v1, v2)
-                if minimum is None or d <= minimum:
-                    minimum = d
-                    min_town1 = v1
-                    min_town2 = v2
-        visited.append(min_town2)
-        unvisited.remove(min_town2)
-        mst += distance(min_town1, min_town2)
+    q = PriorityQueue()
+    head = graph[0]
+    seen = set()
+    for town in graph:
+        q.put((distance(town, head), head, town))
+    while not q.empty():
+        d, start, end = q.get()
+        if end in seen:
+            continue
+        seen.add(end)
+        mst += d
+        for town in graph:
+            q.put((distance(town, end), end, town))
     return mst
 
 
@@ -136,5 +135,4 @@ def find_one_tree(graph: list) -> float:
     for town in graph[1:]:
         distances.append(distance(removed_vertex, town))
     distances.sort()
-
     return mst + distances[1]
