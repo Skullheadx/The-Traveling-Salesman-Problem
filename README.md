@@ -22,3 +22,31 @@ By checking every single possibility and calculating the distance of each route,
 **Method 2: Nearest Neighbor (NN) Heuristic**
 
 If we start at any town and find the closest town that we haven't been to yet and continue this until all the cities have been visited, this creates a complete tour.
+
+--------------------------------------------------------------------------------------------------------------
+**Lower Bound and the Optimal Solution**
+
+In the case of the TSP, finding the optimal solution for a large number of nodes can end up taking too much time to compute, meaning that we have nothing to compare our heuristic solutions to. 
+This is where the **Minimum Spanning Tree (MST)** comes in. 
+_The minimum spanning tree is the set of edges that connects all the nodes with the minimum cost (in the case of the TSP, the costs is the distance between nodes) and no cycles._  
+**For example:** A graph with 4 nodes: A,B,C,D at (0,0), (0,10), (20,0), (20,10) respectively on the Cartesian Plane will have a MST of 40.0.
+This is because the MST only needs to connect all the nodes in the shortest distance possible, which in this case would be the edges AB + BC + CD. There is also another MST that is equally good which is simply AB + AD + CD.
+
+![img_1.png](img_1.png)
+
+The usefulness of the MST lies in the fact that the optimal tour which in the case of the example above is highlighted in green, is always greater than the MST. 
+`MST Cost < Optimal Tour Cost` Since we are not trying to find the optimal, but a solution that is good enough and that we can calculate within a reasonable amount of time (heuristic solution) we can compare our solution to the minimum spanning tree and get an approximation ratio.
+
+Take this graph for instance. The grey circles represent nodes or towns in the TSP, the blue line represents the Nearest Neighbor heuristic solution and the red line represents the MST. 
+![](NN_Heuristic+MST.png)
+
+By calculating each of the distances in the MST, we can determine that the `length of the MST is approximately 1360.299` and the `length of the tour is approximately 1,994.528`. We can now determine the approximation ratio by simply dividing the tour distance by the MST distance.
+
+`1,994.528 / 1360.299 = 1.466`
+
+`1.466 * 100% - 100% = 46.6% `
+
+By manipulating the result, we can determine how much our solution overshot the lower bound.
+Of course this value does not represent to a high degree of accuracy how much we overshot the optimal solution, but it does give us ballpark numbers.
+In this case, the approximation ratio is `46.6%` of the MST.
+(As an exercise to the reader, can you determine why this is the MST?)

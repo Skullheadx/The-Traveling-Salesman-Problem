@@ -84,7 +84,7 @@ def print_info(route: list, time: float, method_name: str, one_tree: float, one_
         f"""
 Traveling Salesman Problem
 Method Used: {method_name}
-Approximation ratio: {round(d/one_tree * 100 - 100,r)}%
+Approximation ratio: {round(d / one_tree * 100 - 100, r)}%
 Time Used: {round(time, r):,} seconds
 Number of Nodes: {(len(route) - 1):,}
 Distance: {round(d, r):,}
@@ -112,35 +112,57 @@ MST cost <= cost(T)
 """
 
 
-def find_MST(graph: list) -> float:
-    mst = 0.0
+def find_one_tree(graph: list, removed_vertex_index=0):
+    removed_vertex = graph[removed_vertex_index]
+    g = graph[:removed_vertex_index] + graph[removed_vertex_index + 1:]
+    mst_distance, mst = find_MST(g)
+    distances = []
+    for town in g:
+        distances.append((distance(removed_vertex, town), town))
+    distances.sort()
+    # Add the two closest nodes to the removed node
+    mst.append((removed_vertex, distances[1][1]))
+    mst.append((removed_vertex, distances[0][1]))
+
+    one_tree_distance = mst_distance + distances[1][0] + distances[0][0]
+    return one_tree_distance, mst
+
+
+def find_lower_bound(graph: list):
+    lower_bound = None
+    lowest_one_tree = []
+    rm_vertex = None
+
+    for removed_vertex_index in range(len(graph)):
+        one_tree_distance,one_tree= find_one_tree(graph,removed_vertex_index)
+
+        if lower_bound is None or one_tree_distance > lower_bound:
+            lower_bound = one_tree_distance
+            lowest_one_tree = one_tree[:]
+            rm_vertex = graph[removed_vertex_index]
+    return lower_bound, lowest_one_tree, rm_vertex
+
+
+def find_MST(graph: list):
     q = PriorityQueue()
     head = graph[0]
-    seen = set()
+    seen = {head}
+    mst = []
+    mst_distance = 0.0
     for town in graph:
-        q.put((distance(town, head), head, town))
-    while not q.empty():
+        if town != head:
+            q.put((distance(town, head), head, town))
+    while not q.empty() and len(mst) < len(graph) - 1:
         d, start, end = q.get()
         if end in seen:
             continue
         seen.add(end)
-        mst += d
+
+        mst.append((start, end))
+        mst_distance += d
+
         for town in graph:
-            q.put((distance(town, end), end, town))
-    return mst
+            if town != end:
+                q.put((distance(town, end), end, town))
 
-
-def find_one_tree(graph: list) -> float:
-    lower_bound = None
-
-    for removed_vertex in graph:
-        g = graph[:graph.index(removed_vertex)] + graph[graph.index(removed_vertex) + 1:]
-        mst = find_MST(g)
-        distances = []
-        for town in g:
-            distances.append(distance(removed_vertex, town))
-        distances.sort()
-        d = mst + distances[1]
-        if lower_bound is None or d < lower_bound:
-            lower_bound = d
-    return lower_bound
+    return mst_distance, mst

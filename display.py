@@ -1,7 +1,5 @@
 import pygame
 import math
-from graph import distance
-from queue import PriorityQueue
 
 pygame.init()
 
@@ -12,40 +10,6 @@ BLUE = (0, 0, 255)
 ORANGE = (255, 165, 0)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
-
-
-def find_MST(route: list) -> list:
-    q = PriorityQueue()
-    head = route[0]
-    seen = set()
-    mst = []
-    for town in route:
-        q.put((distance(town, head), head, town))
-    while not q.empty():
-        d, start, end = q.get()
-        if end in seen:
-            continue
-        seen.add(end)
-
-        mst.append((start, end))
-
-        for town in route:
-            q.put((distance(town, end), end, town))
-
-    return mst
-
-
-def find_one_tree(route: list):
-    removed_vertex = route[0]
-    mst = find_MST(route[1:-1])
-    distances = []
-    for town in route[1:-1]:
-        distances.append((distance(removed_vertex, town), town))
-    distances.sort()
-    mst.append((distances[0][1], removed_vertex))
-    mst.append((distances[1][1], removed_vertex))
-
-    return mst, removed_vertex
 
 
 class Node:
@@ -110,7 +74,7 @@ class Salesman:
 class Display:
     pygame.display.set_caption("Traveling Salesman Problem")
 
-    def __init__(self, path: str, route: list) -> None:
+    def __init__(self, path: str, route: list, mst=None, one_tree=None, removed_vertex=None) -> None:
         with open(path, "r") as f:
             contents = f.read().split("\n")
             if contents[-1] == "":
@@ -123,8 +87,9 @@ class Display:
         self.route = route
         self.salesman = Salesman(self.route)
 
-        self.mst = find_MST(route[:-1])
-        self.ot, self.ot_removed_point = find_one_tree(route)
+        self.mst = mst
+        self.one_tree = one_tree
+        self.removed_vertex = removed_vertex
 
     def update(self, delta: float) -> None:
         self.salesman.update(delta)
@@ -142,19 +107,24 @@ class Display:
             self.salesman.update(delta)
 
             self.screen.fill(WHITE)
-
-            pygame.draw.circle(self.screen, BLUE, self.ot_removed_point, 15)
-
-            if len(self.route) > 1:
-                for line in self.ot:  # One Tree
+            if self.one_tree is not None:
+                pygame.draw.circle(self.screen,BLUE,self.removed_vertex,15)
+                for line in self.one_tree:  # One Tree
                     start, end = line
                     pygame.draw.line(self.screen, GREEN, start, end, 12)
+            if self.mst is not None:
                 for line in self.mst:  # Minimum Spanning Tree
                     start, end = line
-                    pygame.draw.line(self.screen, RED, start, end, 7)
-                pygame.draw.aalines(self.screen, BLUE, True, self.route)  # Route
+                    pygame.draw.line(self.screen, RED, start, end, 8)
+
+            if len(self.route) > 1:
+                pygame.draw.lines(self.screen, BLUE, True, self.route, 3)  # Route
+
             for node in self.nodes:
                 node.draw(self.screen)
-            self.salesman.draw(self.screen)
+            # self.salesman.draw(self.screen)
+
             pygame.display.update()
             delta = clock.tick(60) / 1000  # Seconds
+            # pygame.image.save(self.screen, "NN Heuristic + MST.png")
+            # quit()
