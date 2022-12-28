@@ -9,11 +9,16 @@ def prune_filename(filename: str) -> int:
 def create(path: str, width: int, height: int, nodes: int):
     graph = []
     text = f"{width} {height} {nodes}\n"
+    seen = set()  # so that there are no duplicate points
 
-    for node in range(nodes):
+    counter = 0
+    while counter < nodes:
         x, y = (random.randint(0, width), random.randint(0, height))
-        graph.append((x, y))
-        text += f"{x} {y}\n"
+        if (x, y) not in seen:
+            graph.append((x, y))
+            text += f"{x} {y}\n"
+            seen.add((x, y))
+            counter += 1
 
     current_file = 0
     for root, dirs, files in os.walk(path):
