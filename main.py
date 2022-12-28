@@ -1,4 +1,4 @@
-from graph import create, print_info
+from graph import create, print_info, find_MST, find_one_tree
 from display import Display
 from brute_force import brute_force
 from nearest_neighbor import nearest_neighbor
@@ -27,7 +27,10 @@ def main():
     route = nearest_neighbor(graph)  # 100 nodes in 0.5762094999663532 seconds. Distance = 6,270.568142156188
     time_end = perf_counter()
 
-    print_info(route, time_end - time_start, "NN Heuristic", r=100)
+    MST = find_MST(graph)
+    ONE_TREE = find_one_tree(graph)
+
+    print_info(route, time_end - time_start, "NN Heuristic", MST, ONE_TREE, r=100)
 
     display = Display(os.path.join(GRAPH_PATH, filename), route)
     display.show()

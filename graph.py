@@ -55,24 +55,73 @@ def calculate_route(route: list) -> float:
     return d
 
 
-def print_info(route: list, time: float, method_name: str, r=0) -> None:
+def find_shortest_route(routes: list) -> list:
+    shortest_distance = None
+    shortest_route = []
+    for route in routes:
+        d = calculate_route(route)
+        if shortest_distance is None or d <= shortest_distance:
+            shortest_distance = d
+            shortest_route = route
+    return shortest_route
+
+
+def print_info(route: list, time: float, method_name: str, mst: float, ot: float, r=0) -> None:
     print(
         f"""
         Traveling Salesman Problem
         Method Used: {method_name}
         Time Used: {round(time, r):,} seconds
         Number of Nodes: {(len(route) - 1):,}
-        Distance: {round(calculate_route(route), r):,} 
+        Distance: {round(calculate_route(route), r):,}
+        Minimum Spanning Tree: {round(mst, r):,}
+        One Tree: {round(ot, r):,}
         """)
 
 
-def find_shortest_route(routes: list) -> list:
-    shortest_distance = None
-    shortest_route = []
-    for route in routes:
-        d = calculate_route(route)
-        print(d)
-        if shortest_distance is None or d < shortest_distance:
-            shortest_distance = d
-            shortest_route = route
-    return shortest_route
+"""
+Approximation ratio (alpha) = heuristic solution / optimal solution
+E.g. a = 28.2/27.0 = 1.044 = 4.4% above optimal
+
+Compare to a lower bound
+
+Minimum Spanning Tree (MST)
+- Set of edges that connect all vertices with minimum distance and no cycles
+
+Prim's Algorithm
+
+MST Cost < TSP Cost
+Remove any edge from the optimal solution and you get a spanning tree T
+which is at least the cost of the MST
+MST cost <= cost(T)
+
+"""
+
+
+def find_MST(graph: list) -> float:
+    mst = 0.0
+    visited = [graph[0]]
+    unvisited = graph[1:]
+    for i in range(len(graph)-1):
+        v1 = visited[i]
+        minimum = None
+        min_town = None
+        for v2 in unvisited:
+            d = distance(v1, v2)
+            if minimum is None or d <= minimum:
+                minimum = d
+                min_town = v2
+        visited.append(min_town)
+        unvisited.remove(min_town)
+        mst += distance(v1, min_town)
+    return mst
+
+
+def find_one_tree(graph: list) -> float:
+    removed_vertex = graph[0]
+    mst = find_MST(graph[1:])
+    distances = []
+    for town in graph[1:]:
+        distances.append(distance(removed_vertex, town))
+    distances.sort()
+    return mst + distances[0] + distances[1]
