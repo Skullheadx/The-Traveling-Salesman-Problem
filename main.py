@@ -22,7 +22,7 @@ def main():
                     print("The file does not exist")
 
     if CREATE_NEW_GRAPHS:
-        graph, filename = create(GRAPH_PATH, 640, 640, 100)
+        graph, filename = create(GRAPH_PATH, 640, 640, 50)
     else:
         filename = "graph1.txt"
         graph = read(GRAPH_PATH, filename)
@@ -37,7 +37,8 @@ def main():
     one_tree = find_one_tree(graph)
     one_tree_time_end = perf_counter()
 
-    print_info(route, route_time_end - route_time_start, "NN Heuristic",  one_tree, one_tree_time_end-one_tree_time_start,r=100)
+    print_info(route, route_time_end - route_time_start, "NN Heuristic", one_tree,
+               one_tree_time_end - one_tree_time_start, r=3)
 
     display = Display(os.path.join(GRAPH_PATH, filename), route)
     display.show()

@@ -78,16 +78,18 @@ def find_shortest_route(routes: list) -> list:
     return shortest_route
 
 
-def print_info(route: list, time: float, method_name: str, one_tree: float, one_tree_time:float, r=0) -> None:
+def print_info(route: list, time: float, method_name: str, one_tree: float, one_tree_time: float, r=0) -> None:
+    d = calculate_route(route)
     print(
         f"""
 Traveling Salesman Problem
 Method Used: {method_name}
+Approximation ratio: {round(d/one_tree * 100 - 100,r)}%
 Time Used: {round(time, r):,} seconds
 Number of Nodes: {(len(route) - 1):,}
-Distance: {round(calculate_route(route), r):,}
+Distance: {round(d, r):,}
 One Tree Lower Bound: {round(one_tree, r):,}
-One Tree Time Used: {round(one_tree_time, r):,}
+One Tree Time Used: {round(one_tree_time, r):,} seconds
 """)
 
 
@@ -132,7 +134,7 @@ def find_one_tree(graph: list) -> float:
     lower_bound = None
 
     for removed_vertex in graph:
-        g = graph[:graph.index(removed_vertex)] + graph[graph.index(removed_vertex)+1:]
+        g = graph[:graph.index(removed_vertex)] + graph[graph.index(removed_vertex) + 1:]
         mst = find_MST(g)
         distances = []
         for town in g:

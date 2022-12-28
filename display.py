@@ -35,7 +35,7 @@ def find_MST(route: list) -> list:
     return mst
 
 
-def find_one_tree(route: list) -> list:
+def find_one_tree(route: list):
     removed_vertex = route[0]
     mst = find_MST(route[1:-1])
     distances = []
@@ -124,7 +124,7 @@ class Display:
         self.salesman = Salesman(self.route)
 
         self.mst = find_MST(route[:-1])
-        self.ot,self.ot_removed_point = find_one_tree(route)
+        self.ot, self.ot_removed_point = find_one_tree(route)
 
     def update(self, delta: float) -> None:
         self.salesman.update(delta)
@@ -143,7 +143,7 @@ class Display:
 
             self.screen.fill(WHITE)
 
-            pygame.draw.circle(self.screen,BLUE,self.ot_removed_point,15)
+            pygame.draw.circle(self.screen, BLUE, self.ot_removed_point, 15)
 
             if len(self.route) > 1:
                 for line in self.ot:  # One Tree
