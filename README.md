@@ -35,14 +35,14 @@ This is because the MST only needs to connect all the nodes in the shortest dist
 ![img_1.png](img_1.png)
 
 The usefulness of the MST lies in the fact that the optimal tour which in the case of the example above is highlighted in green, is always greater than the MST. 
-`MST Cost < Optimal Tour Cost` Since we are not trying to find the optimal, but a solution that is good enough and that we can calculate within a reasonable amount of time (heuristic solution) we can compare our solution to the minimum spanning tree and get an approximation ratio.
+`MST Cost < Optimal Tour Cost` Since we are not trying to find the optimal solution, but a solution that is good enough and that we can calculate within a reasonable amount of time (heuristic solution) we can compare our solution to the minimum spanning tree and get an approximation ratio.
 
 Take this graph for instance. The grey circles represent nodes or towns in the TSP, the blue line represents the Nearest Neighbor heuristic solution and the red line represents the MST. 
 ![](NN_Heuristic+MST.png)
 
-By calculating each of the distances in the MST, we can determine that the `length of the MST is approximately 1360.299` and the `length of the tour is approximately 1,994.528`. We can now determine the approximation ratio by simply dividing the tour distance by the MST distance.
+By calculating each of the distances in the MST, we can determine that the `MST Cost = 1360.299` and the `Tour Cost = 1,994.528`. We can now determine the approximation ratio by simply dividing the tour cost by the MST cost.
 
-`1,994.528 / 1360.299 = 1.466`
+`Tour Cost / MST Cost = 1,994.528 / 1360.299 = 1.466`
 
 `1.466 * 100% - 100% = 46.6% `
 
