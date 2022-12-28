@@ -53,3 +53,26 @@ def calculate_route(route: list) -> float:
         d += distance(town1, town2)
         town1 = town2
     return d
+
+
+def print_info(route: list, time: float, method_name: str, r=0) -> None:
+    print(
+        f"""
+        Traveling Salesman Problem
+        Method Used: {method_name}
+        Time Used: {round(time, r):,} seconds
+        Number of Nodes: {(len(route) - 1):,}
+        Distance: {round(calculate_route(route), r):,} 
+        """)
+
+
+def find_shortest_route(routes: list) -> list:
+    shortest_distance = None
+    shortest_route = []
+    for route in routes:
+        d = calculate_route(route)
+        print(d)
+        if shortest_distance is None or d < shortest_distance:
+            shortest_distance = d
+            shortest_route = route
+    return shortest_route
