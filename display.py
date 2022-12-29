@@ -21,16 +21,21 @@ class Node:
     radius = 6
     thickness = 1
 
-    # font = pygame.font.SysFont("arial", 20)
+    font = pygame.font.SysFont("arial", 20)
 
     def __init__(self, position: tuple, number: int) -> None:
         self.position = pygame.Vector2(position)
         # self.text = self.font.render(str(number), True, self.text_colour)
+        self.coord_text = self.font.render(str((self.position)), True, (0, 0, 0))
+
 
     def draw(self, surf: pygame.Surface) -> None:
         pygame.draw.circle(surf, self.background_colour, self.position, self.radius)
         pygame.draw.circle(surf, self.outline_colour, self.position, self.radius, width=self.thickness)
         # surf.blit(self.text, self.text.get_rect(center=self.position))
+
+
+        surf.blit(self.coord_text, self.coord_text.get_rect(center=self.position))
 
 
 class Salesman:
@@ -90,14 +95,14 @@ class Display:
         if mode == "points":
             self.route = linker(self.route)
 
-        self.salesman = Salesman(self.route)
+        # self.salesman = Salesman(self.route)
 
         self.mst = mst
         self.one_tree = one_tree
         self.removed_vertex = removed_vertex
 
-    def update(self, delta: float) -> None:
-        self.salesman.update(delta)
+    # def update(self, delta: float) -> None:
+        # self.salesman.update(delta)
 
     def show(self) -> None:
         is_running = True
@@ -109,7 +114,7 @@ class Display:
                 if event.type == pygame.QUIT:
                     is_running = False
 
-            self.salesman.update(delta)
+            # self.salesman.update(delta)
 
             self.screen.fill(WHITE)
             if self.one_tree is not None:
@@ -129,9 +134,8 @@ class Display:
 
             for i, node in enumerate(self.nodes):
                 node.draw(self.screen)
-                # text = self.font.render(str((node.position)), True, (0, 0, 0))
-                # self.screen.blit(text, text.get_rect(center=node.position))
-            self.salesman.draw(self.screen)
+
+            # self.salesman.draw(self.screen)
 
             pygame.display.update()
             delta = clock.tick(60) / 1000  # Seconds

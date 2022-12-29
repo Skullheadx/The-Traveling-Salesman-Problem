@@ -3,11 +3,12 @@ from display import Display
 from brute_force import brute_force
 from nearest_neighbor import nearest_neighbor
 from greedy import greedy
+from Christofides import christofides
 from time import perf_counter
 import os
 
 GRAPH_PATH = "graphs/"
-CREATE_NEW_GRAPHS = True
+CREATE_NEW_GRAPHS = False
 
 
 def main():
@@ -22,7 +23,7 @@ def main():
                     print("The file does not exist")
 
     if CREATE_NEW_GRAPHS:
-        graph, filename = create(GRAPH_PATH, 640, 640, 100)
+        graph, filename = create(GRAPH_PATH, 640, 640, 5)
     else:
         filename = "graph1.txt"
         graph = read(GRAPH_PATH, filename)
@@ -30,22 +31,24 @@ def main():
     route_time_start = perf_counter()
     # route = brute_force(graph)  # 10 nodes in 85.042 seconds. Optimal = 2,262.29
     # route = nearest_neighbor(graph)  # 100 nodes in 0.5762094999663532 seconds. Distance = 6,270.568142156188
-    route = greedy(graph)  # 100 nodes in 0.1383088999427855 seconds. Distance = 5,523.211501332208 OTLB: 4,
+    # route = greedy(graph)  # 100 nodes in 0.1383088999427855 seconds. Distance = 5,523.211501332208 OTLB: 4,
     # 344.881943246125 Approx. 27.119944188995277%
+    route = christofides(graph)
     route_time_end = perf_counter()
 
-    # MST_distance, MST = find_MST(graph)
-    # print("MST_DISTANCE:", MST_distance)
+    MST_distance, MST = find_MST(graph)
+    print("MST_DISTANCE:", MST_distance)
     one_tree_time_start = perf_counter()
-    # one_tree_distance, one_tree = find_one_tree(graph)
-    lower_bound, one_tree, removed_vertex = find_lower_bound(graph)
+    lower_bound,one_tree  = find_one_tree(graph)
+    removed_vertex = graph[0]
+    # lower_bound, one_tree, removed_vertex = find_lower_bound(graph)
     one_tree_time_end = perf_counter()
 
-    print_info(route, route_time_end - route_time_start, "Greedy Heuristic", lower_bound,
+    print_info(route, route_time_end - route_time_start, "Christofides Algorithm", lower_bound,
                one_tree_time_end - one_tree_time_start, r=3000, mode="points")
 
-    display = Display(os.path.join(GRAPH_PATH, filename), route, mst=None, one_tree=one_tree,
-                      removed_vertex=removed_vertex, mode="points")
+    display = Display(os.path.join(GRAPH_PATH, filename), [], mst=MST, one_tree=route,
+                      removed_vertex=removed_vertex, mode="direct")
     display.show()
 
 

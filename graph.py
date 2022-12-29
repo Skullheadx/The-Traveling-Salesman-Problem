@@ -70,7 +70,6 @@ def calculate_route(route: list, mode="direct") -> float:
         d = 0.0
         for i in route:
             start, end = i
-
             d += distance(start, end)
         return d
 
@@ -204,8 +203,14 @@ def linker(points):
     while True:
         start, end = current
         direct.append(end)
-
-        a, b = graph[end]
+        if len(graph[end]) > 2:
+            a = start
+            for i in graph[end]:
+                if i != a:
+                    b = i
+                    break
+        else:
+            a, b = graph[end]
         if a == start:
             current = (end, b)
         else:
