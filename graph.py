@@ -69,9 +69,9 @@ def calculate_route(route: list, mode="direct") -> float:
     elif mode == "points":
         d = 0.0
         for i in route:
-            start,end = i
+            start, end = i
 
-            d += distance(start,end)
+            d += distance(start, end)
         return d
 
 
@@ -86,10 +86,11 @@ def find_shortest_route(routes: list) -> list:
     return shortest_route
 
 
-def print_info(route: list, time: float, method_name: str, one_tree: float, one_tree_time: float, r=0, mode="direct") -> None:
+def print_info(route: list, time: float, method_name: str, one_tree: float, one_tree_time: float, r=0,
+               mode="direct") -> None:
     d = calculate_route(route, mode)
     if mode == "direct":
-        num_nodes =  (len(route) - 1)
+        num_nodes = (len(route) - 1)
     elif mode == "points":
         num_nodes = len(route)
     print(
@@ -146,7 +147,7 @@ def find_lower_bound(graph: list):
     rm_vertex = None
 
     for removed_vertex_index in range(len(graph)):
-        one_tree_distance,one_tree= find_one_tree(graph,removed_vertex_index)
+        one_tree_distance, one_tree = find_one_tree(graph, removed_vertex_index)
 
         if lower_bound is None or one_tree_distance > lower_bound:
             lower_bound = one_tree_distance
@@ -178,3 +179,39 @@ def find_MST(graph: list):
                 q.put((distance(town, end), end, town))
 
     return mst_distance, mst
+
+
+def linker(points):
+    p = points[:]
+    direct = [p[0][0]]
+    head = p[0][0]
+    current = p[0]
+
+    graph = dict()
+
+    for pair in p:
+        start, end = pair
+        if start in graph:
+            graph[start].append(end)
+        else:
+            graph[start] = [end]
+        if end in graph:
+            graph[end].append(start)
+        else:
+            graph[end] = [start]
+    seen = set()
+    seen.add(head)
+    while True:
+        start, end = current
+        direct.append(end)
+
+        a, b = graph[end]
+        if a == start:
+            current = (end, b)
+        else:
+            current = (end, a)
+
+        if end == head:
+            break
+
+    return direct

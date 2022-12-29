@@ -22,7 +22,7 @@ def main():
                     print("The file does not exist")
 
     if CREATE_NEW_GRAPHS:
-        graph, filename = create(GRAPH_PATH, 640, 640, 15)
+        graph, filename = create(GRAPH_PATH, 640, 640, 100)
     else:
         filename = "graph1.txt"
         graph = read(GRAPH_PATH, filename)
@@ -30,8 +30,8 @@ def main():
     route_time_start = perf_counter()
     # route = brute_force(graph)  # 10 nodes in 85.042 seconds. Optimal = 2,262.29
     # route = nearest_neighbor(graph)  # 100 nodes in 0.5762094999663532 seconds. Distance = 6,270.568142156188
-    route = greedy(graph)  # 100 nodes in 0.5762094999663532 seconds. Distance = 6,270.568142156188
-    print(f"{route=}")
+    route = greedy(graph)  # 100 nodes in 0.1383088999427855 seconds. Distance = 5,523.211501332208 OTLB: 4,
+    # 344.881943246125 Approx. 27.119944188995277%
     route_time_end = perf_counter()
 
     # MST_distance, MST = find_MST(graph)
@@ -44,8 +44,8 @@ def main():
     print_info(route, route_time_end - route_time_start, "Greedy Heuristic", lower_bound,
                one_tree_time_end - one_tree_time_start, r=3000, mode="points")
 
-    display = Display(os.path.join(GRAPH_PATH, filename), [], mst=route, one_tree=None,
-                      removed_vertex=removed_vertex)
+    display = Display(os.path.join(GRAPH_PATH, filename), route, mst=None, one_tree=one_tree,
+                      removed_vertex=removed_vertex, mode="points")
     display.show()
 
 

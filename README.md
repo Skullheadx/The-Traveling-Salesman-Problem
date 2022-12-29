@@ -82,3 +82,5 @@ Using these new approximation ratios, we can now determine how effective differe
 
 --------------------------------------------------------------------------------------------------------------
 **Method 3: Greedy Heuristic**
+
+If we use an approach similar to how we created the Minimum Spanning Tree, we can apply similar logic to create a good heuristic. In each iteration, we determine the shortest edge distance to add to the route, however we must follow the rules that each town is connected to exactly 2 other towns and by adding an edge, we do not create a cycle of length smaller than n.  

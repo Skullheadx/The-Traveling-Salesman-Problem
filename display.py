@@ -1,5 +1,6 @@
 import pygame
 import math
+from graph import linker
 
 pygame.init()
 
@@ -75,7 +76,7 @@ class Display:
     pygame.display.set_caption("Traveling Salesman Problem")
     font = pygame.font.SysFont("arial", 20)
 
-    def __init__(self, path: str, route: list, mst=None, one_tree=None, removed_vertex=None) -> None:
+    def __init__(self, path: str, route: list, mst=None, one_tree=None, removed_vertex=None, mode="direct") -> None:
         with open(path, "r") as f:
             contents = f.read().split("\n")
             if contents[-1] == "":
@@ -86,14 +87,17 @@ class Display:
         self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
 
         self.route = route
-        # self.salesman = Salesman(self.route)
+        if mode == "points":
+            self.route = linker(self.route)
+
+        self.salesman = Salesman(self.route)
 
         self.mst = mst
         self.one_tree = one_tree
         self.removed_vertex = removed_vertex
 
-    # def update(self, delta: float) -> None:
-    #     self.salesman.update(delta)
+    def update(self, delta: float) -> None:
+        self.salesman.update(delta)
 
     def show(self) -> None:
         is_running = True
@@ -105,31 +109,31 @@ class Display:
                 if event.type == pygame.QUIT:
                     is_running = False
 
-            # self.salesman.update(delta)
+            self.salesman.update(delta)
 
             self.screen.fill(WHITE)
             if self.one_tree is not None:
-                pygame.draw.circle(self.screen,BLUE,self.removed_vertex,15)
+                pygame.draw.circle(self.screen, BLUE, self.removed_vertex, 15)
                 for line in self.one_tree:  # One Tree
                     start, end = line
                     pygame.draw.line(self.screen, GREEN, start, end, 12)
             if self.mst is not None:
-                for i,line in enumerate(self.mst):  # Minimum Spanning Tree
+                for i, line in enumerate(self.mst):  # Minimum Spanning Tree
                     start, end = line
-                    pygame.draw.line(self.screen,ORANGE, start, end, 4)
-                    text = self.font.render(str(i), True, (0,0,0))
-                    self.screen.blit(text, text.get_rect(center=((start[0]+end[0])/2,(end[1]+start[1])/2)))
+                    pygame.draw.line(self.screen, ORANGE, start, end, 4)
+                    # text = self.font.render(str(i), True, (0,0,0))
+                    # self.screen.blit(text, text.get_rect(center=((start[0]+end[0])/2,(end[1]+start[1])/2)))
 
             if len(self.route) > 1:
                 pygame.draw.lines(self.screen, BLUE, True, self.route, 3)  # Route
 
-            for i,node in enumerate(self.nodes):
+            for i, node in enumerate(self.nodes):
                 node.draw(self.screen)
-                text = self.font.render(str((node.position)), True, (0, 0, 0))
-                self.screen.blit(text, text.get_rect(center=node.position))
-            # self.salesman.draw(self.screen)
+                # text = self.font.render(str((node.position)), True, (0, 0, 0))
+                # self.screen.blit(text, text.get_rect(center=node.position))
+            self.salesman.draw(self.screen)
 
             pygame.display.update()
             delta = clock.tick(60) / 1000  # Seconds
-            # pygame.image.save(self.screen, "NN_Heuristic+OneTree.png")
+            # pygame.image.save(self.screen, "Greedy_Heuristic+OneTree.png")
             # quit()
