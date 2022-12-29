@@ -73,6 +73,7 @@ class Salesman:
 
 class Display:
     pygame.display.set_caption("Traveling Salesman Problem")
+    font = pygame.font.SysFont("arial", 20)
 
     def __init__(self, path: str, route: list, mst=None, one_tree=None, removed_vertex=None) -> None:
         with open(path, "r") as f:
@@ -85,14 +86,14 @@ class Display:
         self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
 
         self.route = route
-        self.salesman = Salesman(self.route)
+        # self.salesman = Salesman(self.route)
 
         self.mst = mst
         self.one_tree = one_tree
         self.removed_vertex = removed_vertex
 
-    def update(self, delta: float) -> None:
-        self.salesman.update(delta)
+    # def update(self, delta: float) -> None:
+    #     self.salesman.update(delta)
 
     def show(self) -> None:
         is_running = True
@@ -104,7 +105,7 @@ class Display:
                 if event.type == pygame.QUIT:
                     is_running = False
 
-            self.salesman.update(delta)
+            # self.salesman.update(delta)
 
             self.screen.fill(WHITE)
             if self.one_tree is not None:
@@ -113,15 +114,19 @@ class Display:
                     start, end = line
                     pygame.draw.line(self.screen, GREEN, start, end, 12)
             if self.mst is not None:
-                for line in self.mst:  # Minimum Spanning Tree
+                for i,line in enumerate(self.mst):  # Minimum Spanning Tree
                     start, end = line
-                    pygame.draw.line(self.screen, RED, start, end, 8)
+                    pygame.draw.line(self.screen,ORANGE, start, end, 4)
+                    text = self.font.render(str(i), True, (0,0,0))
+                    self.screen.blit(text, text.get_rect(center=((start[0]+end[0])/2,(end[1]+start[1])/2)))
 
             if len(self.route) > 1:
                 pygame.draw.lines(self.screen, BLUE, True, self.route, 3)  # Route
 
-            for node in self.nodes:
+            for i,node in enumerate(self.nodes):
                 node.draw(self.screen)
+                text = self.font.render(str((node.position)), True, (0, 0, 0))
+                self.screen.blit(text, text.get_rect(center=node.position))
             # self.salesman.draw(self.screen)
 
             pygame.display.update()

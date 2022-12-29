@@ -56,15 +56,23 @@ def get_distances(graph: list) -> dict:
     return distances
 
 
-def calculate_route(route: list) -> float:
-    town1 = route[0]
-    town2 = route[-1]
-    d = distance(town1, town2)
-    for i, node in enumerate(route[:-1]):
-        town2 = route[i + 1]
-        d += distance(town1, town2)
-        town1 = town2
-    return d
+def calculate_route(route: list, mode="direct") -> float:
+    if mode == "direct":
+        town1 = route[0]
+        town2 = route[-1]
+        d = distance(town1, town2)
+        for i, node in enumerate(route[:-1]):
+            town2 = route[i + 1]
+            d += distance(town1, town2)
+            town1 = town2
+        return d
+    elif mode == "points":
+        d = 0.0
+        for i in route:
+            start,end = i
+
+            d += distance(start,end)
+        return d
 
 
 def find_shortest_route(routes: list) -> list:
@@ -78,15 +86,19 @@ def find_shortest_route(routes: list) -> list:
     return shortest_route
 
 
-def print_info(route: list, time: float, method_name: str, one_tree: float, one_tree_time: float, r=0) -> None:
-    d = calculate_route(route)
+def print_info(route: list, time: float, method_name: str, one_tree: float, one_tree_time: float, r=0, mode="direct") -> None:
+    d = calculate_route(route, mode)
+    if mode == "direct":
+        num_nodes =  (len(route) - 1)
+    elif mode == "points":
+        num_nodes = len(route)
     print(
         f"""
 Traveling Salesman Problem
 Method Used: {method_name}
 Approximation ratio: {round(d / one_tree * 100 - 100, r)}%
 Time Used: {round(time, r):,} seconds
-Number of Nodes: {(len(route) - 1):,}
+Number of Nodes: {num_nodes:,}
 Distance: {round(d, r):,}
 One Tree Lower Bound: {round(one_tree, r):,}
 One Tree Time Used: {round(one_tree_time, r):,} seconds

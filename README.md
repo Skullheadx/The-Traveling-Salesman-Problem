@@ -76,3 +76,9 @@ In this example, the `One Tree Lower Bound Cost = 1,734.686` and the `Tour Cost 
 
 
 In this case, the approximation ratio is `15.0%` of the One Tree Lower Bound Cost! This is a significantly better approximation of how close we are to the optimal tour cost compared to the approximation ratio using the MST.  
+
+
+Using these new approximation ratios, we can now determine how effective different heuristic approaches are to the optimal solution.
+
+--------------------------------------------------------------------------------------------------------------
+**Method 3: Greedy Heuristic**
