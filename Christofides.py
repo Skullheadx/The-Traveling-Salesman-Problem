@@ -4,6 +4,7 @@ from collections import Counter
 from copy import deepcopy
 
 def linker2(points):
+    route = []
     graph = dict()
 
     for pair in points:
@@ -17,27 +18,40 @@ def linker2(points):
             graph[end].append(start)
         else:
             graph[end] = [start]
-    print(graph)
     q = Queue()
-    q.put([points[0][0]])
+    q.put(([points[0][0]], points[:]))
     seen = set()
     while not q.empty():
-        current = q.get()
+        current, pts = q.get()
 
         if tuple(current) in seen:
             continue
         else:
             seen.add(tuple(current))
 
-        if Counter(current) == Counter(points):
-            return current
-        print(current, points)
-        for i in graph[current[-1]]:
-            temp = deepcopy(current)
-            temp.append(i)
-            q.put(temp)
+        if len(pts) == 0:
+            s = set()
+            for i in current:
+                if i not in s:
+                    route.append(i)
+                    s.add(i)
+            break
 
-    return []
+        for i in graph[current[-1]]:
+            if (current[-1], i) in pts:
+                temp = deepcopy(current)
+                temp.append(i)
+                temp2 = pts[:]
+                temp2.remove((current[-1], i))
+                q.put((temp,temp2))
+            elif (i,current[-1]) in pts:
+                temp = deepcopy(current)
+                temp.append(i)
+                temp2 = pts[:]
+                temp2.remove((i,current[-1]))
+                q.put((temp,temp2))
+
+    return route
 
 def christofides(graph: list):
     _, mst = find_MST(graph)
@@ -91,10 +105,9 @@ def christofides(graph: list):
 
     eulerian_tour = linker2(multigraph)
     #
-    print(eulerian_tour)
     #
     # print(g)
-    return perfect_matching
+    return eulerian_tour
 
 """
 

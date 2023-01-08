@@ -95,7 +95,7 @@ class Display:
         if mode == "points":
             self.route = linker(self.route)
 
-        # self.salesman = Salesman(self.route)
+        self.salesman = Salesman(self.route)
 
         self.mst = mst
         self.one_tree = one_tree
@@ -114,7 +114,7 @@ class Display:
                 if event.type == pygame.QUIT:
                     is_running = False
 
-            # self.salesman.update(delta)
+            self.salesman.update(delta)
 
             self.screen.fill(WHITE)
             if self.one_tree is not None:
@@ -125,7 +125,7 @@ class Display:
             if self.mst is not None:
                 for i, line in enumerate(self.mst):  # Minimum Spanning Tree
                     start, end = line
-                    pygame.draw.line(self.screen, ORANGE, start, end, 4)
+                    pygame.draw.line(self.screen, ORANGE, start, end, 12)
                     # text = self.font.render(str(i), True, (0,0,0))
                     # self.screen.blit(text, text.get_rect(center=((start[0]+end[0])/2,(end[1]+start[1])/2)))
 
@@ -135,7 +135,7 @@ class Display:
             for i, node in enumerate(self.nodes):
                 node.draw(self.screen)
 
-            # self.salesman.draw(self.screen)
+            self.salesman.draw(self.screen)
 
             pygame.display.update()
             delta = clock.tick(60) / 1000  # Seconds
