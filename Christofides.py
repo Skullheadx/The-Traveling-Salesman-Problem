@@ -1,51 +1,43 @@
 from graph import distance, find_MST, calculate_route
 from queue import Queue
-
+from collections import Counter
+from copy import deepcopy
 
 def linker2(points):
-    p = points[:]
-    direct = [p[0][0]]
-    head = p[0][0]
-    current = p[0]
-
     graph = dict()
 
-    for pair in p:
+    for pair in points:
         start, end = pair
         if start in graph:
             graph[start].append(end)
         else:
             graph[start] = [end]
+
         if end in graph:
             graph[end].append(start)
         else:
             graph[end] = [start]
+    print(graph)
+    q = Queue()
+    q.put([points[0][0]])
     seen = set()
-    seen.add(head)
-    while True:
-        start, end = current
-        direct.append(end)
-        if len(graph[end]) > 2:
-            a = start
-            for ind, i in enumerate(graph[end]):
-                if i != a and ((len(direct) == len(points) - 1 and i == head) or i not in seen):
-                    b = i
-                    seen.add(i)
-                    break
-        else:
-            a, b = graph[end]
-            if b in seen:
-                b = head
-            seen.add(b)
-        if a == start:
-            current = (end, b)
-        else:
-            current = (end, a)
+    while not q.empty():
+        current = q.get()
 
-        if end == head:
-            break
+        if tuple(current) in seen:
+            continue
+        else:
+            seen.add(tuple(current))
 
-    return direct
+        if Counter(current) == Counter(points):
+            return current
+        print(current, points)
+        for i in graph[current[-1]]:
+            temp = deepcopy(current)
+            temp.append(i)
+            q.put(temp)
+
+    return []
 
 def christofides(graph: list):
     _, mst = find_MST(graph)
@@ -91,18 +83,18 @@ def christofides(graph: list):
                         q.put(c)
 
 
-    multigraph = perfect_matching + mst
+    multigraph = mst + perfect_matching
     # print(f"{odd_degree_vertices=}")
     # print(f"{mst=}")
     # print(f"{perfect_matching=}")
     # print(f"{multigraph=}")
 
     eulerian_tour = linker2(multigraph)
-
+    #
     print(eulerian_tour)
-
+    #
     # print(g)
-    return eulerian_tour
+    return perfect_matching
 
 """
 
