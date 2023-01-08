@@ -83,4 +83,20 @@ Using these new approximation ratios, we can now determine how effective differe
 --------------------------------------------------------------------------------------------------------------
 **Method 3: Greedy Heuristic**
 
-If we use an approach similar to how we created the Minimum Spanning Tree, we can apply similar logic to create a good heuristic. In each iteration, we determine the shortest edge distance to add to the route, however we must follow the rules that each town is connected to exactly 2 other towns and by adding an edge, we do not create a cycle of length smaller than n.  
+If we use an approach similar to how we created the Minimum Spanning Tree, we can apply similar logic to create a good heuristic. In each iteration, we determine the shortest edge distance to add to the route, however we must follow the rules that each town is connected to exactly 2 other towns and by adding an edge, we do not create a cycle of length smaller than n.
+
+--------------------------------------------------------------------------------------------------------------
+**Method 4: The Christofides Algorithm**
+
+When we compare the MST to the optimal solution, they often share many of the same edges. Meaning that if we modify the MST into a TSP tour, it will be very similar to the optimal solution.
+![](Christofides.png)
+
+Take the above graph for instance. The blue lines represent a TSP tour created using the Christofides Algorithm while the orange lines represent the MST.
+The Christofides Algorithm creates a tour by:
+1. Finding all odd degree vertices in the MST. Each node in the MST connects a number of other nodes, this number is the degree of the node. For example, the node at (276,378) connects to 2 other nodes, namely (275, 450) and (215, 263). Therefore it has degree 2.
+2. Find the perfect matching of all odd degree vertices. By taking each odd degree vertex and creating an edge with another vertex such that all odd degree vertices have been paired up with the minimum cost, we can determine the perfect matching. (Note: In any graph, the sum of all the vertex degrees is equal to twice the number of edges. Therefore, there can not be an odd number of odd degree vertices)
+3. Combine the perfect matching and the MST into a multi-graph. This graph will by definition have only even degree vertices (since the MST's odd degree vertices will each receive one more edge therefore its odd degree will become and even degree)
+4. Construct an Eulerian Tour of the multi-graph by passing through each edge once until all edges have been passed through.
+5. Construct a TSP tour by going through the Eulerian tour and when we encounter a node we have already visited, simply skip over it and connect the previous node to the next one that has not been visited yet.
+
+--------------------------------------------------------------------------------------------------------------

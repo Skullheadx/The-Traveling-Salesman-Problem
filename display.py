@@ -135,9 +135,9 @@ class Display:
             for i, node in enumerate(self.nodes):
                 node.draw(self.screen)
 
-            self.salesman.draw(self.screen)
+            # self.salesman.draw(self.screen)
 
             pygame.display.update()
             delta = clock.tick(60) / 1000  # Seconds
-            # pygame.image.save(self.screen, "Greedy_Heuristic+OneTree.png")
+            # pygame.image.save(self.screen, "Christofides.png")
             # quit()
