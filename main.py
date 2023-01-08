@@ -8,7 +8,7 @@ from time import perf_counter
 import os
 
 GRAPH_PATH = "graphs/"
-CREATE_NEW_GRAPHS = False
+CREATE_NEW_GRAPHS = True
 
 
 def main():
@@ -23,7 +23,7 @@ def main():
                     print("The file does not exist")
 
     if CREATE_NEW_GRAPHS:
-        graph, filename = create(GRAPH_PATH, 640, 640, 5)
+        graph, filename = create(GRAPH_PATH, 640, 640, 10)
     else:
         filename = "graph1.txt"
         graph = read(GRAPH_PATH, filename)
@@ -45,9 +45,9 @@ def main():
     one_tree_time_end = perf_counter()
 
     print_info(route, route_time_end - route_time_start, "Christofides Algorithm", lower_bound,
-               one_tree_time_end - one_tree_time_start, r=3000, mode="points")
+               one_tree_time_end - one_tree_time_start, r=3000, mode="direct")
 
-    display = Display(os.path.join(GRAPH_PATH, filename), [], mst=MST, one_tree=route,
+    display = Display(os.path.join(GRAPH_PATH, filename), route, mst=MST, one_tree=None,
                       removed_vertex=removed_vertex, mode="direct")
     display.show()
 
