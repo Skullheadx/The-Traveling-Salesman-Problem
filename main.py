@@ -1,9 +1,6 @@
-from graph import create, read, print_info, find_MST, find_one_tree, find_lower_bound
+from graph import create, read, print_info, find_MST, find_lower_bound
 from display import Display
-from brute_force import brute_force
-from nearest_neighbor import nearest_neighbor
-from greedy import greedy
-from Christofides import christofides
+from heuristics.Christofides import christofides
 from time import perf_counter
 import os
 
