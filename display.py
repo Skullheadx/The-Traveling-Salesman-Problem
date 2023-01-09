@@ -26,7 +26,7 @@ class Node:
     def __init__(self, position: tuple, number: int) -> None:
         self.position = pygame.Vector2(position)
         # self.text = self.font.render(str(number), True, self.text_colour)
-        self.coord_text = self.font.render(str((self.position)), True, (0, 0, 0))
+        # self.coord_text = self.font.render(str((self.position)), True, (0, 0, 0))
 
 
     def draw(self, surf: pygame.Surface) -> None:
@@ -35,7 +35,7 @@ class Node:
         # surf.blit(self.text, self.text.get_rect(center=self.position))
 
 
-        surf.blit(self.coord_text, self.coord_text.get_rect(center=self.position))
+        # surf.blit(self.coord_text, self.coord_text.get_rect(center=self.position))
 
 
 class Salesman:
@@ -81,7 +81,7 @@ class Display:
     pygame.display.set_caption("Traveling Salesman Problem")
     font = pygame.font.SysFont("arial", 20)
 
-    def __init__(self, path: str, route: list, mst=None, one_tree=None, removed_vertex=None, mode="direct") -> None:
+    def __init__(self, path: str, route: list,improved_route=None, mst=None, one_tree=None, removed_vertex=None, mode="direct") -> None:
         with open(path, "r") as f:
             contents = f.read().split("\n")
             if contents[-1] == "":
@@ -94,6 +94,8 @@ class Display:
         self.route = route
         if mode == "points":
             self.route = linker(self.route)
+
+        self.route2 = improved_route
 
         self.salesman = Salesman(self.route)
 
@@ -130,7 +132,9 @@ class Display:
                     # self.screen.blit(text, text.get_rect(center=((start[0]+end[0])/2,(end[1]+start[1])/2)))
 
             if len(self.route) > 1:
-                pygame.draw.lines(self.screen, BLUE, True, self.route, 3)  # Route
+                pygame.draw.lines(self.screen, BLUE, True, self.route, 12)  # Route
+            if len(self.route) > 1:
+                pygame.draw.lines(self.screen, RED, True, self.route2, 3)  # Route
 
             for i, node in enumerate(self.nodes):
                 node.draw(self.screen)
