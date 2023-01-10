@@ -220,3 +220,12 @@ def linker(points):
             break
 
     return direct
+
+
+def delinker(route: list) -> list:
+    output = []
+
+    for i in range(len(route)):
+        output.append((route[i], route[(i + 1) % len(route)]))
+
+    return output
