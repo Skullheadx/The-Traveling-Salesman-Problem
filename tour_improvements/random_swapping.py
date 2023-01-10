@@ -1,7 +1,7 @@
 from graph import calculate_route
 from random import sample
 
-
+# For swapping once
 def random_swap(route: list) -> list:
     r = route[:]
 
@@ -13,7 +13,7 @@ def random_swap(route: list) -> list:
 
     return r
 
-
+# check and swap if better n times
 def random_swapping(route: list, n: int) -> list:
     d = calculate_route(route)
     r = route[:]

@@ -114,3 +114,10 @@ This method of improving a candidate solution created by a heuristic is called l
 
 **Random Swapping**
 
+One easy tour improvement to implement is random swapping. We simply randomly select two nodes which we swap in the tour, if the resulting route has less cost, we use this new route.
+
+--------------------------------------------------------------------------------------------------------------
+
+**2-Opt Improvement**
+
+O
