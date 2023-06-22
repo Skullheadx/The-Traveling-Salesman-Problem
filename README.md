@@ -123,4 +123,4 @@ One easy tour improvement to implement is random swapping. We simply randomly se
 
 **2-Opt Improvement**
 
-O
+TO BE CONTINUED
